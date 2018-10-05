@@ -10,7 +10,7 @@ import pandas as pd
 import colorsys
 
 from Tkinter import *
-import Image, ImageTk
+# import Image, ImageTk
 from skimage import color
 import ttk
 import os
@@ -18,10 +18,14 @@ import glob
 from ConfigParser import SafeConfigParser
 
 
+# config
+PLAYER_WNAME = 'connectomics_annotation'
+
+
 def flick(x):
     pass
 
-def show_image_sequencees(cube_as_array, labels_all_images_as_array):
+def show_image_sequencees(cube_as_array, labels_all_images_as_array, output_folder):
 
     # get some parameters
     image_w = labels_all_images_as_array.shape[2]
@@ -33,23 +37,23 @@ def show_image_sequencees(cube_as_array, labels_all_images_as_array):
 
     # initiation
     cv2.destroyAllWindows()
-    cv2.moveWindow(player_wname, 400, 150)
-    cv2.namedWindow(player_wname, 16) # WINDOW_GUI_NORMAL
+    cv2.moveWindow(PLAYER_WNAME, 400, 150)
+    cv2.namedWindow(PLAYER_WNAME, 16) # WINDOW_GUI_NORMAL
     # for debug - to test whether select the same sells
     # cv2.namedWindow("mask", 16) 
     # cv2.namedWindow('boundary', 16) 
-    annotate_tools.init(annotate_tools.annots, player_wname, labels_all_images_as_array, image_w, image_h)
-    cv2.setMouseCallback(player_wname, annotate_tools.dragcircle, annotate_tools.annots)
+    annotate_tools.init(annotate_tools.annots, PLAYER_WNAME, labels_all_images_as_array, image_w, image_h)
+    cv2.setMouseCallback(PLAYER_WNAME, annotate_tools.dragcircle, annotate_tools.annots)
     # controls = np.zeros((50, int(playerwidth*3)), np.uint8)
     # cv2.putText(controls, "W/w: Play, S/s: Stay, A/a: Prev, D/d: Next, E/e: Fast, Q/q: Slow, Esc: Exit, g: good, b: bad, n: no annot.", (40, 20),
                 # cv2.FONT_HERSHEY_SIMPLEX, 0.5, 255)
 
-    cv2.createTrackbar('z_index', player_wname, 0, z_depth - 1, flick)
-    cv2.setTrackbarPos('z_index', player_wname, z_index)
+    cv2.createTrackbar('z_index', PLAYER_WNAME, 0, z_depth - 1, flick)
+    cv2.setTrackbarPos('z_index', PLAYER_WNAME, z_index)
 
     while True:
         # update
-        z_index = cv2.getTrackbarPos('z_index', player_wname)
+        z_index = cv2.getTrackbarPos('z_index', PLAYER_WNAME)
         # prepare image to show
         crt_cube_image = cube_as_array[z_index, :, :]   
         crt_to_show_cube_image = np.dstack((crt_cube_image, crt_cube_image, crt_cube_image))
@@ -81,7 +85,7 @@ def show_image_sequencees(cube_as_array, labels_all_images_as_array):
             annotate_tools.annots.frame_n = z_index
 
         # show image
-        cv2.imshow(player_wname, crt_to_show_stacked_image)
+        cv2.imshow(PLAYER_WNAME, crt_to_show_stacked_image)
         
         # check the update of annotator to update the label
         if annotate_tools.annots.state == "selected":
@@ -101,31 +105,37 @@ def show_image_sequencees(cube_as_array, labels_all_images_as_array):
             np.save('annotated_segs_'+time.strftime("%Y%m%d_%H%M%S")+'.npy', labels_all_images_as_array)
         
 
-    cv2.destroyWindow(player_wname)
+    cv2.destroyWindow(PLAYER_WNAME)
     
-# /usr/bin/python annotate_gui_connectomics.py '/home/shuqi/Desktop/shuqi/annotate_opencv-master/data/predicted_segs_second_try.npy' '/home/shuqi/Desktop/shuqi/annotate_opencv-master/data/cube_sem_data_second_try.npy' '/home/shuqi/Desktop/shuqi/annotate_opencv-master/annotation_history/'
-if len(sys.argv) < 4:
-    print("Usage: python annotate_gui_connectomics.py <path_to_predicted_segs_npy_file> <path_to_cube_data_npy_file> <path_to_folder_where_you_want_to_store_your_annotation>")
-    sys.exit(1)
-
-# '/home/shuqi/Desktop/shuqi/annotate_opencv-master/data/cube_sem_data_second_try.npy'
-cube_raw_data_file = str(sys.argv[2])
-# '/home/shuqi/Desktop/shuqi/annotate_opencv-master/data/predicted_segs_second_try.npy'
-seg_raw_data_file = str(sys.argv[1])
-# '/home/shuqi/Desktop/shuqi/annotate_opencv-master/annotation_history/'
-output_folder = str(sys.argv[3])
-
-# config
-player_wname = 'connectomics_annotation'
-
-
-# root = Tk()
-# root.title("connectomics annotation")
+    
+#
+## /usr/bin/python annotate_gui_connectomics.py '/home/shuqi/Desktop/shuqi/annotate_opencv-master/data/predicted_segs_second_try.npy' '/home/shuqi/Desktop/shuqi/annotate_opencv-master/data/cube_sem_data_second_try.npy' '/home/shuqi/Desktop/shuqi/annotate_opencv-master/annotation_history/'
+#if len(sys.argv) < 4:
+#    print("Usage: python annotate_gui_connectomics.py <path_to_predicted_segs_npy_file> <path_to_cube_data_npy_file> <path_to_folder_where_you_want_to_store_your_annotation>")
+#    sys.exit(1)
+#
+## '/home/shuqi/Desktop/shuqi/annotate_opencv-master/data/cube_sem_data_second_try.npy'
+#cube_raw_data_file = str(sys.argv[2])
+## '/home/shuqi/Desktop/shuqi/annotate_opencv-master/data/predicted_segs_second_try.npy'
+#seg_raw_data_file = str(sys.argv[1])
+## '/home/shuqi/Desktop/shuqi/annotate_opencv-master/annotation_history/'
+#output_folder = str(sys.argv[3])
 
 
-# readin file
-cube_raw_data = np.load(cube_raw_data_file)
-seg_raw_data = np.load(seg_raw_data_file)
-
-show_image_sequencees(cube_raw_data.reshape((768,384,384)), seg_raw_data.reshape((768,384,384)).astype('uint16'))
-# show_image_sequencees(cube_raw_data, False)
+def main(sem, seg, output_folder):    
+    """Run file."""
+    # root = Tk()
+    # root.title("connectomics annotation")
+    
+    
+    # readin file
+    print('Reading SEM')
+    cube_raw_data = np.load(sem)
+    print(')
+    seg_raw_data = np.load(seg)
+    
+    show_image_sequencees(
+        cube_raw_data.reshape((768,384,384)),
+        seg_raw_data.reshape((768,384,384)).astype('uint16'),
+        output_folder=output_folder)
+    # show_image_sequencees(cube_raw_data, False)
