@@ -31,6 +31,19 @@ These instructions will get you a copy of the project up and running on your loc
 
 *python annotate_gui_connectomics.py 'path_to_predicted_segs_npy_file 'path_to_cube_data_npy_file' 'path_to_folder_where_you_want_to_store_your_annotation'*
 
+## If running from spyder or ipython
+Open spyder and run everything in the ipython window (bottom right).
+
+`import gipl_to_npy`
+`in_file = <path_to_in_file>`
+`out_file = <path_to_out_file>`
+`header = gipl_to_npy.ReadFileHeader(in_file)`
+`gipl_to_npy.WriteVolume(header, in_file, out_file)`
+
+
+`import annotate_gui_connectomics`
+`annotate_gui_connectomics.main(sem='U:\BioMed_Users\dberson\@@@Berson Data\Projects\Briggman_retinal_data\Matt_Schiel\k0725 server\Extensions and fixes\Serre collab\Drew predictions\Cubes_[10_64_15]_to_[15_66_17]\cube_sem_data_uint8.npy', seg='U:\BioMed_Users\dberson\@@@Berson Data\Projects\Briggman_retinal_data\Matt_Schiel\k0725 server\Extensions and fixes\Serre collab\Drew predictions\Cubes_[10_64_15]_to_[15_66_17]\converted_predicted_segs_CURATED_v12.npy', output_folder='U:\\BioMed_Users\\dberson\\@@@Berson Data\\Projects\\Briggman_retinal_data\\Matt_Schiel\\k0725 server\\Extensions and fixes\\Serre collab\\Patch')`
+
 
 ## Authors
 
